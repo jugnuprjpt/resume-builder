@@ -28,6 +28,15 @@ export const ResumeValidation = () => {
         email: Yup.string()
             .trim()
             .email("Invalid email format")
-            .required("Enter Valid Email Id")
+            .required("Enter Valid Email Id"),
+
+        role: Yup.string()
+            .trim()
+            .required("Enter your role")
+            .test(
+                'len',
+                "Min 2 characters required",
+                (val) => val && val.toString().length >= 2
+            ),
     })
 }
