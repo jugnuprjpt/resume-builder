@@ -38,5 +38,88 @@ export const ResumeValidation = () => {
                 "Min 2 characters required",
                 (val) => val && val.toString().length >= 2
             ),
+
+        aboutMe: Yup.string()
+            .trim()
+            .required("Enter about me")
+            .test(
+                'len',
+                "Min 20 characters required",
+                (val) => val && val.toString().length >= 20
+            ),
+
+        schoolName: Yup.array().of(
+            Yup.string().required('School/College Name is required')
+        ),
+        degree: Yup.array().of(
+            Yup.string().required('Degree is required')
+        ),
+        startDate: Yup.array().of(
+            Yup.date()
+                .nullable(true)
+                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .required('Start Date is required')
+        ),
+        endDate: Yup.array().of(
+            Yup.date()
+                .nullable(true)
+                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .required('End Date is required')
+        ),
+        skills: Yup.array().of(
+            Yup.string().required('Skill Name is required')
+        ),
+        jobTitle: Yup.array().of(
+            Yup.string().required('Job title is required')
+        ),
+        companyName: Yup.array().of(
+            Yup.string().required('Company Name is required')
+        ),
+        startDateExperience: Yup.array().of(
+            Yup.date()
+                .nullable(true)
+                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .required('Start Date is required')
+        ),
+        endDateExperience: Yup.array().of(
+            Yup.date()
+                .nullable(true)
+                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .required('End Date is required')
+        ),
+        projectTitle: Yup.array().of(
+            Yup.string().required('Project title is required')
+        ),
+        projectDescription: Yup.array().of(
+            Yup.string().required('Project Description is required')
+                .test(
+                    'len',
+                    "Min 20 characters required",
+                    (val) => val && val.toString().length >= 20
+                ),
+        ),
+        achievementTitle: Yup.array().of(
+            Yup.string().required('Achievement title is required')
+        ),
+        achievementDescription: Yup.array().of(
+            Yup.string().required('Achievement Description is required')
+                .test(
+                    'len',
+                    "Min 20 characters required",
+                    (val) => val && val.toString().length >= 20
+                ),
+        ),
+        aditionalTitle: Yup.array().of(
+            Yup.string().required('Aditional title is required')
+        ),
+        aditionalDescription: Yup.array().of(
+            Yup.string().required('AditionalDescription is required')
+                .test(
+                    'len',
+                    "Min 20 characters required",
+                    (val) => val && val.toString().length >= 20
+                ),
+        ),
+
     })
 }

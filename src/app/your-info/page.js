@@ -7,6 +7,7 @@ const page = () => {
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(ResumeValidation()),
     });
+
     const [educationFields, setEducationFields] = useState([{ id: 1 }]);
     const [skillsFields, setSkillsFields] = useState([{ id: 1 }]);
     const [experienceFields, setExperienceFields] = useState([{ id: 1 }]);
@@ -94,7 +95,7 @@ const page = () => {
         const updatedFields = additionalFields.filter(field => field?.id !== id);
         setAdditionalFields(updatedFields);
     };
-
+    console.log(errors)
     return (
         <section section className="text-gray-600 body-font relative" >
             <div className="container px-5 py-24 mx-auto">
@@ -186,7 +187,7 @@ const page = () => {
                                 {errors?.mobileNumber && <span className="text-red-600"> {errors?.mobileNumber?.message}</span>}
                             </div>
 
-                            <div className="p-2 w-1/2">
+                            <div className="p-2 w-full">
                                 <Controller
                                     name="role"
                                     control={control}
@@ -205,6 +206,27 @@ const page = () => {
                                     )}
                                 />
                                 {errors?.role && <span className="text-red-600"> {errors?.role?.message}</span>}
+                            </div>
+
+                            <div className="p-2 w-full">
+                                <Controller
+                                    name={"aboutMe"}
+                                    control={control}
+                                    defaultValue=""
+                                    render={({ field }) => (
+                                        <div className="relative">
+                                            <label for={"aboutMe"} className="leading-7 text-sm text-gray-600">About Me</label>
+                                            <textarea
+                                                id={"aboutMe"}
+                                                name="aboutMe"
+                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                                                {...field}
+                                            >
+                                            </textarea>
+                                        </div>
+                                    )}
+                                />
+                                {errors?.aboutMe && <span className="text-red-600"> {errors?.aboutMe?.message}</span>}
                             </div>
                         </div>
                     </div>
@@ -284,23 +306,23 @@ const page = () => {
                                 </div>
                                 <div className="p-2 w-1/2">
                                     <Controller
-                                        name={`endtDate[${index}]`}
+                                        name={`endDate[${index}]`}
                                         control={control}
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`endtDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
+                                                <label for={`endDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
                                                 <input
                                                     type="date"
-                                                    id={`endtDate[${index}]`}
-                                                    name="endtDate"
+                                                    id={`endDate[${index}]`}
+                                                    name="endDate"
                                                     className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                                     {...field}
                                                 />
                                             </div>
                                         )}
                                     />
-                                    {errors?.endtDate?.[index] && <span className="text-red-600"> {errors?.endtDate?.message?.[index]}</span>}
+                                    {errors?.endDate?.[index] && <span className="text-red-600"> {errors?.endDate?.[index]?.message}</span>}
                                 </div>
                                 {
                                     educationFields?.length > 1 &&
@@ -455,23 +477,23 @@ const page = () => {
                                 </div>
                                 <div className="p-2 w-1/2">
                                     <Controller
-                                        name={`endtDate[${index}]`}
+                                        name={`endDateExperience[${index}]`}
                                         control={control}
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`endtDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
+                                                <label for={`endDateExperience[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
                                                 <input
                                                     type="date"
-                                                    id={`endtDate[${index}]`}
-                                                    name="endtDate"
+                                                    id={`endDateExperience[${index}]`}
+                                                    name="endDateExperience"
                                                     className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                                     {...field}
                                                 />
                                             </div>
                                         )}
                                     />
-                                    {errors?.endtDate?.[index] && <span className="text-red-600"> {errors?.endtDate?.[index]?.message}</span>}
+                                    {errors?.endDateExperience?.[index] && <span className="text-red-600"> {errors?.endDateExperience?.[index]?.message}</span>}
                                 </div>
                                 {
                                     experienceFields?.length > 1 &&
@@ -528,16 +550,18 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`ptojectDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <label for={`projectDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
                                                 <textarea
                                                     id={`projectDescription`}
                                                     name={`projectDescription[${index}]`}
-                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                >
                                                 </textarea>
                                             </div>
                                         )}
                                     />
-                                    {errors?.ptojectTitle?.[index] && <span className="text-red-600"> {errors?.ptojectTitle?.[index]?.message}</span>}
+                                    {errors?.projectDescription?.[index] && <span className="text-red-600"> {errors?.projectDescription?.[index]?.message}</span>}
                                 </div>
                                 {
                                     projectFields?.length > 1 &&
@@ -598,12 +622,14 @@ const page = () => {
                                                 <textarea
                                                     id={`achievementDescription[${index}]`}
                                                     name="achievementDescription"
-                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                >
                                                 </textarea>
                                             </div>
                                         )}
                                     />
-                                    {errors?.achievementTitle?.[index] && <span className="text-red-600"> {errors?.achievementTitle?.[index]?.message}</span>}
+                                    {errors?.achievementDescription?.[index] && <span className="text-red-600"> {errors?.achievementDescription?.[index]?.message}</span>}
                                 </div>
 
                                 {
@@ -629,7 +655,6 @@ const page = () => {
                             </svg>
                             Add Additional
                         </button>
-                        {console.log(additionalFields)}
                         {additionalFields?.map((data, index) => (
                             <React.Fragment key={data?.id}>
                                 <div className="flex flex-wrap -m-2">
@@ -644,7 +669,7 @@ const page = () => {
                                                     <input
                                                         type="text"
                                                         id={`aditionalTitle[${index}]`}
-                                                        name="aditionalTitle"
+                                                        name="achievementDescription"
                                                         className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                                         {...field}
                                                     />
@@ -665,7 +690,9 @@ const page = () => {
                                                 <textarea
                                                     id={`aditionalDescription[${index}]`}
                                                     name="aditionalDescription"
-                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                >
                                                 </textarea>
                                             </div>
                                         )}
@@ -687,7 +714,7 @@ const page = () => {
                     </div>
                     <br />
                     <div className="p-2 w-full">
-                        <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" type="submit">Submit</button>
+                        <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" type="submit" disabled={errors?.length > 0 && true}>Submit</button>
                     </div>
                 </form>
             </div>
