@@ -11,6 +11,8 @@ const page = () => {
     const [skillsFields, setSkillsFields] = useState([{ id: 1 }]);
     const [experienceFields, setExperienceFields] = useState([{ id: 1 }]);
     const [projectFields, setProjectFields] = useState([{ id: 1 }]);
+    const [achivementFields, setAchivementtFields] = useState([{ id: 1 }]);
+    const [additionalFields, setAdditionalFields] = useState([{ id: 1 }]);
 
     const submitHandler = (data) => {
         console.log(data);
@@ -67,6 +69,32 @@ const page = () => {
         setProjectFields(updatedFields);
     };
 
+    // achivement
+    const addAchievementField = () => {
+        const newField = {
+            id: achivementFields.length + 1
+        };
+        setAchivementtFields([...achivementFields, newField]);
+    };
+
+    const removeAchivementField = (id) => {
+        const updatedFields = achivementFields.filter(field => field.id !== id);
+        setAchivementtFields(updatedFields);
+    };
+
+    // additional
+    const addAdditionalField = () => {
+        const newField = {
+            id: additionalFields.length + 1
+        };
+        setAdditionalFields([...additionalFields, newField]);
+    };
+
+    const removeAdditionalField = (id) => {
+        const updatedFields = additionalFields.filter(field => field?.id !== id);
+        setAdditionalFields(updatedFields);
+    };
+
     return (
         <section section className="text-gray-600 body-font relative" >
             <div className="container px-5 py-24 mx-auto">
@@ -74,6 +102,7 @@ const page = () => {
                     <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create Your Resume</h1>
                 </div>
                 <form onSubmit={handleSubmit(submitHandler)}>
+                    {/* Personal Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Personal Details</h1>
                         <div className="flex flex-wrap -m-2">
@@ -180,6 +209,7 @@ const page = () => {
                         </div>
                     </div>
                     <br />
+                    {/* Education Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Education</h1>
 
@@ -190,8 +220,8 @@ const page = () => {
                             Add Education
                         </button>
 
-                        {educationFields?.map((field, index) => (
-                            <div className="flex flex-wrap -m-2">
+                        {educationFields?.map((data, index) => (
+                            <div className="flex flex-wrap -m-2" key={data?.id}>
                                 <div className="p-2 w-1/2">
                                     <Controller
                                         name={`schoolName[${index}]`}
@@ -274,7 +304,7 @@ const page = () => {
                                 </div>
                                 {
                                     educationFields?.length > 1 &&
-                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeEducationField(field.id)}>
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeEducationField(data.id)}>
                                         <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
                                         </svg>
@@ -287,6 +317,7 @@ const page = () => {
                         }
                     </div>
                     <br />
+                    {/* Skills Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Skills</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addskillsField}>
@@ -295,8 +326,8 @@ const page = () => {
                             </svg>
                             Add Skills
                         </button>
-                        {skillsFields?.map((field, index) => (
-                            <div className="flex flex-wrap -m-2">
+                        {skillsFields?.map((data, index) => (
+                            <div className="flex flex-wrap -m-2" key={data?.id}>
                                 <div className="p-2 w-1/2">
                                     <Controller
                                         name={`skills[${index}]`}
@@ -338,7 +369,7 @@ const page = () => {
                                 </div>
                                 {
                                     skillsFields?.length > 1 &&
-                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeskillsField(field.id)}>
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeskillsField(data.id)}>
                                         <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
                                         </svg>
@@ -351,6 +382,7 @@ const page = () => {
 
                     </div>
                     <br />
+                    {/* Experience Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Experience</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addsExperienceField}>
@@ -359,8 +391,8 @@ const page = () => {
                             </svg>
                             Add Experience
                         </button>
-                        {experienceFields?.map((field, index) => (
-                            <div className="flex flex-wrap -m-2">
+                        {experienceFields?.map((data, index) => (
+                            <div className="flex flex-wrap -m-2" key={data?.id}>
                                 <div className="p-2 w-1/2">
                                     <Controller
                                         name={`jobTitle[${index}]`}
@@ -443,7 +475,7 @@ const page = () => {
                                 </div>
                                 {
                                     experienceFields?.length > 1 &&
-                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeExperienceField(field.id)}>
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeExperienceField(data.id)}>
                                         <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
                                         </svg>
@@ -455,6 +487,7 @@ const page = () => {
                         }
                     </div>
                     <br />
+                    {/* Project Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Projects</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addProjectField}>
@@ -463,8 +496,8 @@ const page = () => {
                             </svg>
                             Add Project
                         </button>
-                        {projectFields?.map((field, index) => (
-                            <React.Fragment key={index}>
+                        {projectFields?.map((data, index) => (
+                            <React.Fragment key={data?.id}>
                                 <div className="flex flex-wrap -m-2">
                                     <div className="p-2 w-full">
                                         <Controller
@@ -508,7 +541,7 @@ const page = () => {
                                 </div>
                                 {
                                     projectFields?.length > 1 &&
-                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeProjectField(field.id)}>
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeProjectField(data.id)}>
                                         <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
                                         </svg>
@@ -519,100 +552,139 @@ const page = () => {
                         ))
                         }
                     </div>
+                    <br />
+                    {/* Achievement Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
-                        <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Achivements</h1>
-                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addProjectField}>
+                        <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Achievement</h1>
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addAchievementField}>
                             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
                             </svg>
-                            Add Project
+                            Add Achievement
                         </button>
-                        <div className="flex flex-wrap -m-2">
-                            <div className="p-2 w-full">
-                                <Controller
-                                    name="achivementsTitle"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="achivementsTitle" className="leading-7 text-sm text-gray-600">Title</label>
-                                            <input
-                                                type="text"
-                                                id="achivementsTitle"
-                                                name="achivementsTitle"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.achivementsTitle && <span className="text-red-600"> {errors?.achivementsTitle?.message}</span>}
-                            </div>
-                        </div>
-                        <div className="p-2 w-full">
-                            <Controller
-                                name="achivementsDescription"
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                    <div className="relative">
-                                        <label for="achivementsDescription" className="leading-7 text-sm text-gray-600">Description</label>
-                                        <textarea
-                                            id="achivementsDescription"
-                                            name="achivementsDescription"
-                                            className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                                        </textarea>
+                        {achivementFields?.map((data, index) => (
+                            <React.Fragment key={data?.id}>
+                                <div className="flex flex-wrap -m-2">
+                                    <div className="p-2 w-full">
+                                        <Controller
+                                            name={`achievementTitle[${index}]`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <div className="relative">
+                                                    <label for={`achievementTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
+                                                    <input
+                                                        type="text"
+                                                        id={`achievementTitle[${index}]`}
+                                                        name="achievementTitle"
+                                                        className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                        {...field}
+                                                    />
+                                                </div>
+                                            )}
+                                        />
+                                        {errors?.achievementTitle?.[index] && <span className="text-red-600"> {errors?.achievementTitle?.[index]?.message}</span>}
                                     </div>
-                                )}
-                            />
-                            {errors?.achivementsTitle && <span className="text-red-600"> {errors?.achivementsTitle?.message}</span>}
-                        </div>
+                                </div>
+
+                                <div className="p-2 w-full">
+                                    <Controller
+                                        name={`achievementDescription[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`achievementDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <textarea
+                                                    id={`achievementDescription[${index}]`}
+                                                    name="achievementDescription"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                </textarea>
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.achievementTitle?.[index] && <span className="text-red-600"> {errors?.achievementTitle?.[index]?.message}</span>}
+                                </div>
+
+                                {
+                                    achivementFields?.length > 1 &&
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeAchivementField(data.id)}>
+                                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Remove Achivement
+                                    </button>
+                                }
+                            </React.Fragment>
+                        ))
+                        }
                     </div>
                     <br />
+                    {/* Aditional Detail */}
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Aditional</h1>
-                        <div className="flex flex-wrap -m-2">
-                            <div className="p-2 w-full">
-                                <Controller
-                                    name="aditionalTitle"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="aditionalTitle" className="leading-7 text-sm text-gray-600">Title</label>
-                                            <input
-                                                type="text"
-                                                id="aditionalTitle"
-                                                name="aditionalTitle"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.aditionalTitle && <span className="text-red-600"> {errors?.aditionalTitle?.message}</span>}
-                            </div>
-                        </div>
-                        <div className="p-2 w-full">
-                            <Controller
-                                name="aditionalDescription"
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                    <div className="relative">
-                                        <label for="aditionalDescription" className="leading-7 text-sm text-gray-600">Description</label>
-                                        <textarea
-                                            id="aditionalDescription"
-                                            name="aditionalDescription"
-                                            className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                                        </textarea>
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addAdditionalField}>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Add Additional
+                        </button>
+                        {console.log(additionalFields)}
+                        {additionalFields?.map((data, index) => (
+                            <React.Fragment key={data?.id}>
+                                <div className="flex flex-wrap -m-2">
+                                    <div className="p-2 w-full">
+                                        <Controller
+                                            name={`aditionalTitle[${index}]`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <div className="relative">
+                                                    <label for={`aditionalTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
+                                                    <input
+                                                        type="text"
+                                                        id={`aditionalTitle[${index}]`}
+                                                        name="aditionalTitle"
+                                                        className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                        {...field}
+                                                    />
+                                                </div>
+                                            )}
+                                        />
+                                        {errors?.aditionalTitle?.[index] && <span className="text-red-600"> {errors?.aditionalTitle?.[index]?.message}</span>}
                                     </div>
-                                )}
-                            />
-                            {errors?.aditionalDescription && <span className="text-red-600"> {errors?.aditionalDescription?.message}</span>}
-                        </div>
+                                </div>
+                                <div className="p-2 w-full">
+                                    <Controller
+                                        name={`aditionalDescription[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`aditionalDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <textarea
+                                                    id={`aditionalDescription[${index}]`}
+                                                    name="aditionalDescription"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                </textarea>
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.aditionalDescription?.[index] && <span className="text-red-600"> {errors?.aditionalDescription?.[index]?.message}</span>}
+                                </div>
+                                {
+                                    additionalFields?.length > 1 &&
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeAdditionalField(data.id)}>
+                                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Remove Additional
+                                    </button>
+                                }
+                            </React.Fragment>
+                        ))
+                        }
                     </div>
-                    <br />
                     <br />
                     <div className="p-2 w-full">
                         <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" type="submit">Submit</button>
