@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ResumeValidation } from './ResumeValidation';
@@ -7,11 +7,66 @@ const page = () => {
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(ResumeValidation()),
     });
+    const [educationFields, setEducationFields] = useState([{ id: 1 }]);
+    const [skillsFields, setSkillsFields] = useState([{ id: 1 }]);
+    const [experienceFields, setExperienceFields] = useState([{ id: 1 }]);
+    const [projectFields, setProjectFields] = useState([{ id: 1 }]);
 
     const submitHandler = (data) => {
         console.log(data);
     };
-    console.log(errors)
+    // education field
+    const addEducationField = () => {
+        const newField = {
+            id: educationFields.length + 1
+        };
+        setEducationFields([...educationFields, newField]);
+    };
+
+    const removeEducationField = (id) => {
+        const updatedFields = educationFields.filter(field => field.id !== id);
+        setEducationFields(updatedFields);
+    };
+
+    // skills
+    const addskillsField = () => {
+        const newField = {
+            id: skillsFields.length + 1
+        };
+        setSkillsFields([...skillsFields, newField]);
+    };
+
+    const removeskillsField = (id) => {
+        const updatedFields = skillsFields.filter(field => field.id !== id);
+        setSkillsFields(updatedFields);
+    };
+
+    // expericence
+    const addsExperienceField = () => {
+        const newField = {
+            id: experienceFields.length + 1
+        };
+        setExperienceFields([...experienceFields, newField]);
+    };
+
+    const removeExperienceField = (id) => {
+        const updatedFields = experienceFields.filter(field => field.id !== id);
+        setExperienceFields(updatedFields);
+    };
+
+    // project
+    const addProjectField = () => {
+        const newField = {
+            id: projectFields.length + 1
+        };
+        setProjectFields([...projectFields, newField]);
+    };
+
+    const removeProjectField = (id) => {
+        const updatedFields = projectFields.filter(field => field.id !== id);
+        setProjectFields(updatedFields);
+    };
+
     return (
         <section section className="text-gray-600 body-font relative" >
             <div className="container px-5 py-24 mx-auto">
@@ -127,267 +182,351 @@ const page = () => {
                     <br />
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Education</h1>
-                        <div className="flex flex-wrap -m-2">
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="schoolName"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="schoolName" className="leading-7 text-sm text-gray-600">School/College Name</label>
-                                            <input
-                                                type="text"
-                                                id="schoolName"
-                                                name="schoolName"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.schoolName && <span className="text-red-600"> {errors?.schoolName?.message}</span>}
+
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addEducationField}>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Add Education
+                        </button>
+
+                        {educationFields?.map((field, index) => (
+                            <div className="flex flex-wrap -m-2">
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`schoolName[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`schoolName[${index}]`} className="leading-7 text-sm text-gray-600">School/College Name</label>
+                                                <input
+                                                    type="text"
+                                                    id={`schoolName[${index}]`}
+                                                    name="schoolName"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.schoolName?.[index] && <span className="text-red-600"> {errors?.schoolName?.[index]?.message}</span>}
+                                </div>
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`degree[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`degree[${index}]`} className="leading-7 text-sm text-gray-600">Degree</label>
+                                                <input
+                                                    type="text"
+                                                    id={`degree[${index}]`}
+                                                    name="degree"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.degree?.[index] && <span className="text-red-600"> {errors?.degree?.[index]?.message}</span>}
+                                </div>
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`startDate[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`startDate[${index}]`} className="leading-7 text-sm text-gray-600">Start Date</label>
+                                                <input
+                                                    type="date"
+                                                    id={`startDate[${index}]`}
+                                                    name="startDate"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.startDate?.[index] && <span className="text-red-600"> {errors?.startDate?.[index]?.message}</span>}
+                                </div>
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`endtDate[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`endtDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
+                                                <input
+                                                    type="date"
+                                                    id={`endtDate[${index}]`}
+                                                    name="endtDate"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.endtDate?.[index] && <span className="text-red-600"> {errors?.endtDate?.message?.[index]}</span>}
+                                </div>
+                                {
+                                    educationFields?.length > 1 &&
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeEducationField(field.id)}>
+                                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Remove Education
+                                    </button>
+                                }
                             </div>
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="degree"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="degree" className="leading-7 text-sm text-gray-600">Degree</label>
-                                            <input
-                                                type="text"
-                                                id="degree"
-                                                name="degree"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.degree && <span className="text-red-600"> {errors?.degree?.message}</span>}
-                            </div>
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="startDate"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="startDate" className="leading-7 text-sm text-gray-600">Start Date</label>
-                                            <input
-                                                type="date"
-                                                id="startDate"
-                                                name="startDate"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.startDate && <span className="text-red-600"> {errors?.startDate?.message}</span>}
-                            </div>
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="endtDate"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="endtDate" className="leading-7 text-sm text-gray-600">End Date</label>
-                                            <input
-                                                type="date"
-                                                id="endtDate"
-                                                name="endtDate"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.endtDate && <span className="text-red-600"> {errors?.endtDate?.message}</span>}
-                            </div>
-                        </div>
+
+                        ))
+                        }
                     </div>
                     <br />
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Skills</h1>
-                        <div className="flex flex-wrap -m-2">
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="skills"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="skills" className="leading-7 text-sm text-gray-600">Skills Name</label>
-                                            <input
-                                                type="text"
-                                                id="skills"
-                                                name="skills"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.skills && <span className="text-red-600"> {errors?.skills?.message}</span>}
-                            </div>
-                            <div className="p-2 w-1/2 mt-10">
-                                <div className="flex items-center">
-                                    <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                    </svg>
-                                    <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                    </svg>
-                                    <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                    </svg>
-                                    <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                    </svg>
-                                    <svg className="w-4 h-4 ms-1 text-gray-300 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-                                        <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                    </svg>
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addskillsField}>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Add Skills
+                        </button>
+                        {skillsFields?.map((field, index) => (
+                            <div className="flex flex-wrap -m-2">
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`skills[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`skills[${index}]`} className="leading-7 text-sm text-gray-600">Skills Name</label>
+                                                <input
+                                                    type="text"
+                                                    id={`skills[${index}]`}
+                                                    name="skills"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.skills?.[index] && <span className="text-red-600"> {errors?.skills?.[index]?.message}</span>}
                                 </div>
+                                <div className="p-2 w-1/2 mt-10">
+                                    <div className="flex items-center">
+                                        <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                        <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                        <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                        <svg className="w-4 h-4 text-yellow-300 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                        <svg className="w-4 h-4 ms-1 text-gray-300 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                {
+                                    skillsFields?.length > 1 &&
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeskillsField(field.id)}>
+                                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Remove Skills
+                                    </button>
+                                }
                             </div>
-                        </div>
+                        ))
+                        }
 
                     </div>
                     <br />
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Experience</h1>
-                        <div className="flex flex-wrap -m-2">
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="jobTitle"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="jobTitle" className="leading-7 text-sm text-gray-600">Job Title</label>
-                                            <input
-                                                type="text"
-                                                id="jobTitle"
-                                                name="jobTitle"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.jobTitle && <span className="text-red-600"> {errors?.jobTitle?.message}</span>}
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addsExperienceField}>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Add Experience
+                        </button>
+                        {experienceFields?.map((field, index) => (
+                            <div className="flex flex-wrap -m-2">
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`jobTitle[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`jobTitle[${index}]`} className="leading-7 text-sm text-gray-600">Job Title</label>
+                                                <input
+                                                    type="text"
+                                                    id={`jobTitle[${index}]`}
+                                                    name="jobTitle"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.jobTitle?.[index] && <span className="text-red-600"> {errors?.jobTitle?.[index]?.message}</span>}
+                                </div>
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`companyName[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`companyName[${index}]`} className="leading-7 text-sm text-gray-600">Company Name</label>
+                                                <input
+                                                    type="text"
+                                                    id={`companyName[${index}]`}
+                                                    name="companyName"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.companyName?.[index] && <span className="text-red-600"> {errors?.companyName?.[index]?.message}</span>}
+                                </div>
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`startDateExperience[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`startDateExperience[${index}]`} className="leading-7 text-sm text-gray-600">Start Date</label>
+                                                <input
+                                                    type="date"
+                                                    id={`tartDateExperience[${index}]`}
+                                                    name="startDateExperience"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.startDateExperience?.[index] && <span className="text-red-600"> {errors?.startDateExperience?.[index]?.message}</span>}
+                                </div>
+                                <div className="p-2 w-1/2">
+                                    <Controller
+                                        name={`endtDate[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`endtDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
+                                                <input
+                                                    type="date"
+                                                    id={`endtDate[${index}]`}
+                                                    name="endtDate"
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                    {...field}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.endtDate?.[index] && <span className="text-red-600"> {errors?.endtDate?.[index]?.message}</span>}
+                                </div>
+                                {
+                                    experienceFields?.length > 1 &&
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeExperienceField(field.id)}>
+                                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Remove Experience
+                                    </button>
+                                }
                             </div>
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="companyName"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="companyName" className="leading-7 text-sm text-gray-600">Company Name</label>
-                                            <input
-                                                type="text"
-                                                id="companyName"
-                                                name="companyName"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.companyName && <span className="text-red-600"> {errors?.companyName?.message}</span>}
-                            </div>
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="startDateExperience"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="startDateExperience" className="leading-7 text-sm text-gray-600">Start Date</label>
-                                            <input
-                                                type="date"
-                                                id="startDateExperience"
-                                                name="startDateExperience"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.startDateExperience && <span className="text-red-600"> {errors?.startDateExperience?.message}</span>}
-                            </div>
-                            <div className="p-2 w-1/2">
-                                <Controller
-                                    name="endtDate"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="endtDate" className="leading-7 text-sm text-gray-600">End Date</label>
-                                            <input
-                                                type="date"
-                                                id="endtDate"
-                                                name="endtDate"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.endtDate && <span className="text-red-600"> {errors?.endtDate?.message}</span>}
-                            </div>
-                        </div>
+                        ))
+                        }
                     </div>
                     <br />
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Projects</h1>
-                        <div className="flex flex-wrap -m-2">
-                            <div className="p-2 w-full">
-                                <Controller
-                                    name="ptojectTitle"
-                                    control={control}
-                                    defaultValue=""
-                                    render={({ field }) => (
-                                        <div className="relative">
-                                            <label for="ptojectTitle" className="leading-7 text-sm text-gray-600">Title</label>
-                                            <input
-                                                type="text"
-                                                id="ptojectTitle"
-                                                name="ptojectTitle"
-                                                className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                                {...field}
-                                            />
-                                        </div>
-                                    )}
-                                />
-                                {errors?.ptojectTitle && <span className="text-red-600"> {errors?.ptojectTitle?.message}</span>}
-                            </div>
-                        </div>
-                        <div className="p-2 w-full">
-                            <Controller
-                                name="ptojectDescription"
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                    <div className="relative">
-                                        <label for="ptojectDescription" className="leading-7 text-sm text-gray-600">Description</label>
-                                        <textarea
-                                            id="ptojectDescription"
-                                            name="ptojectDescription"
-                                            className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
-                                        </textarea>
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addProjectField}>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Add Project
+                        </button>
+                        {projectFields?.map((field, index) => (
+                            <React.Fragment key={index}>
+                                <div className="flex flex-wrap -m-2">
+                                    <div className="p-2 w-full">
+                                        <Controller
+                                            name={`projectTitle[${index}]`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <div className="relative">
+                                                    <label for={`projectTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
+                                                    <input
+                                                        type="text"
+                                                        id={`projectTitle[${index}]`}
+                                                        name="ptojectTitle"
+                                                        className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                                        {...field}
+                                                    />
+                                                </div>
+                                            )}
+                                        />
+                                        {errors?.projectTitle?.[index] && <span className="text-red-600"> {errors?.projectTitle?.[index]?.message}</span>}
                                     </div>
-                                )}
-                            />
-                            {errors?.ptojectTitle && <span className="text-red-600"> {errors?.ptojectTitle?.message}</span>}
-                        </div>
+                                </div>
+
+                                <div className="p-2 w-full">
+                                    <Controller
+                                        name={`projectDescription[${index}]`}
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <div className="relative">
+                                                <label for={`ptojectDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <textarea
+                                                    id={`projectDescription`}
+                                                    name={`projectDescription[${index}]`}
+                                                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out">
+                                                </textarea>
+                                            </div>
+                                        )}
+                                    />
+                                    {errors?.ptojectTitle?.[index] && <span className="text-red-600"> {errors?.ptojectTitle?.[index]?.message}</span>}
+                                </div>
+                                {
+                                    projectFields?.length > 1 &&
+                                    <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => removeProjectField(field.id)}>
+                                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Remove Project
+                                    </button>
+                                }
+                            </React.Fragment>
+                        ))
+                        }
                     </div>
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Achivements</h1>
+                        <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addProjectField}>
+                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            </svg>
+                            Add Project
+                        </button>
                         <div className="flex flex-wrap -m-2">
                             <div className="p-2 w-full">
                                 <Controller
