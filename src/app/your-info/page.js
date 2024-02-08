@@ -15,8 +15,8 @@ const page = () => {
     const [skillsFields, setSkillsFields] = useState([{ id: 1 }]);
     const [experienceFields, setExperienceFields] = useState([{ id: 1 }]);
     const [projectFields, setProjectFields] = useState([{ id: 1 }]);
-    const [achivementFields, setAchivementtFields] = useState([{ id: 1 }]);
-    const [additionalFields, setAdditionalFields] = useState([{ id: 1 }]);
+    // const [achivementFields, setAchivementtFields] = useState([{ id: 1 }]);
+    // const [additionalFields, setAdditionalFields] = useState([{ id: 1 }]);
     const router = useRouter()
 
     const [userDetails, setUserDetails] = useState({})
@@ -119,30 +119,30 @@ const page = () => {
     };
 
     // achivement
-    const addAchievementField = () => {
-        const newField = {
-            id: achivementFields.length + 1
-        };
-        setAchivementtFields([...achivementFields, newField]);
-    };
+    // const addAchievementField = () => {
+    //     const newField = {
+    //         id: achivementFields.length + 1
+    //     };
+    //     setAchivementtFields([...achivementFields, newField]);
+    // };
 
-    const removeAchivementField = (id) => {
-        const updatedFields = achivementFields.filter(field => field.id !== id);
-        setAchivementtFields(updatedFields);
-    };
+    // const removeAchivementField = (id) => {
+    //     const updatedFields = achivementFields.filter(field => field.id !== id);
+    //     setAchivementtFields(updatedFields);
+    // };
 
     // additional
-    const addAdditionalField = () => {
-        const newField = {
-            id: additionalFields.length + 1
-        };
-        setAdditionalFields([...additionalFields, newField]);
-    };
+    // const addAdditionalField = () => {
+    //     const newField = {
+    //         id: additionalFields.length + 1
+    //     };
+    //     setAdditionalFields([...additionalFields, newField]);
+    // };
 
-    const removeAdditionalField = (id) => {
-        const updatedFields = additionalFields.filter(field => field?.id !== id);
-        setAdditionalFields(updatedFields);
-    };
+    // const removeAdditionalField = (id) => {
+    //     const updatedFields = additionalFields.filter(field => field?.id !== id);
+    //     setAdditionalFields(updatedFields);
+    // };
     console.log(errors)
     return (
         <section className="text-gray-600 body-font relative" >
@@ -284,10 +284,11 @@ const page = () => {
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Education</h1>
 
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addEducationField}>
-                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
-                            Add Education
+                            <span className='text-sm px-3'>Add Education</span>
+                            
                         </button>
 
                         {educationFields?.map((data, index) => (
@@ -391,10 +392,11 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Skills</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addskillsField}>
-                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
-                            Add Skills
+                            <span className='text-sm px-3'>Add Skills</span>
+                            
                         </button>
                         {skillsFields?.map((data, index) => (
                             <div className="flex flex-wrap -m-2" key={data?.id}>
@@ -456,10 +458,11 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Experience</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addsExperienceField}>
-                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
-                            Add Experience
+                            <span className='text-sm px-3'>Add Experience</span>
+                          
                         </button>
                         {experienceFields?.map((data, index) => (
                             <div className="flex flex-wrap -m-2" key={data?.id}>
@@ -561,10 +564,11 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Projects</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addProjectField}>
-                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
-                            Add Project
+                           
+                            <span className='text-sm px-3'> Add Project</span>
                         </button>
                         {projectFields?.map((data, index) => (
                             <React.Fragment key={data?.id}>
@@ -626,7 +630,7 @@ const page = () => {
                     </div>
                     <br />
                     {/* Achievement Detail */}
-                    <div className="lg:w-1/2 md:w-2/3 mx-auto">
+                    {/* <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Achievement</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addAchievementField}>
                             <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -693,9 +697,9 @@ const page = () => {
                         ))
                         }
                     </div>
-                    <br />
+                    <br /> */}
                     {/* Aditional Detail */}
-                    <div className="lg:w-1/2 md:w-2/3 mx-auto">
+                    {/* <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Aditional</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addAdditionalField}>
                             <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -760,7 +764,7 @@ const page = () => {
                         ))
                         }
                     </div>
-                    <br />
+                    <br /> */}
                     <div className="p-2 w-full">
                         <button className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" type="submit" disabled={errors?.length > 0 && true}>Submit</button>
                     </div>
