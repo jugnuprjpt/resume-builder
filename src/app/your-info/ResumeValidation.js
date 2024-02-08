@@ -3,7 +3,7 @@ export const ResumeValidation = () => {
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     return Yup.object().shape({
         firstName: Yup.string()
-            .trim()
+            ?.trim()
             .required("Enter your first name")
             .test(
                 'len',
@@ -11,7 +11,7 @@ export const ResumeValidation = () => {
                 (val) => val && val.toString().length >= 2
             ),
         lastName: Yup.string()
-            .trim()
+            ?.trim()
             .required("Enter your last name")
             .test(
                 'len',
@@ -26,12 +26,12 @@ export const ResumeValidation = () => {
             .max(10, "Max 10 characters required"),
 
         email: Yup.string()
-            .trim()
+            ?.trim()
             .email("Invalid email format")
             .required("Enter Valid Email Id"),
 
         role: Yup.string()
-            .trim()
+            ?.trim()
             .required("Enter your role")
             .test(
                 'len',
@@ -40,7 +40,7 @@ export const ResumeValidation = () => {
             ),
 
         aboutMe: Yup.string()
-            .trim()
+            ?.trim()
             .required("Enter about me")
             .test(
                 'len',
@@ -57,13 +57,13 @@ export const ResumeValidation = () => {
         startDate: Yup.array().of(
             Yup.date()
                 .nullable(true)
-                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .transform((value, originalValue) => originalValue?.trim() === '' ? null : value)
                 .required('Start Date is required')
         ),
         endDate: Yup.array().of(
             Yup.date()
                 .nullable(true)
-                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .transform((value, originalValue) => originalValue?.trim() === '' ? null : value)
                 .required('End Date is required')
         ),
         skills: Yup.array().of(
@@ -78,13 +78,13 @@ export const ResumeValidation = () => {
         startDateExperience: Yup.array().of(
             Yup.date()
                 .nullable(true)
-                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .transform((value, originalValue) => originalValue?.trim() === '' ? null : value)
                 .required('Start Date is required')
         ),
         endDateExperience: Yup.array().of(
             Yup.date()
                 .nullable(true)
-                .transform((value, originalValue) => originalValue.trim() === '' ? null : value)
+                .transform((value, originalValue) => originalValue?.trim() === '' ? null : value)
                 .required('End Date is required')
         ),
         projectTitle: Yup.array().of(
