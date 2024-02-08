@@ -1,10 +1,13 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { collection, doc, getDocs, query, addDoc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ResumeValidation } from './ResumeValidation';
+import { useRouter } from 'next/navigation'
 const page = () => {
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: yupResolver(ResumeValidation()),
     });
 
@@ -14,9 +17,54 @@ const page = () => {
     const [projectFields, setProjectFields] = useState([{ id: 1 }]);
     const [achivementFields, setAchivementtFields] = useState([{ id: 1 }]);
     const [additionalFields, setAdditionalFields] = useState([{ id: 1 }]);
+    const router = useRouter()
 
-    const submitHandler = (data) => {
+    const [userDetails, setUserDetails] = useState({})
+    console.log(userDetails, 'details')
+    useEffect(() => {
+        getDetails();
+    }, [])
+
+    const formatDate = (date) => {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+    const getDetails = async () => {
+        const testRef = await collection(db, "resume");
+        const queryString = query(testRef);
+        const querySnapshot = await getDocs(queryString);
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data(), doc);
+            const details = doc.data()
+            // setValue('firstName', details?.firstName)
+            console.log(formatDate(new Date(details?.endDate[0].seconds * 1000)))
+            reset({ ...details, endDate: formatDate(new Date(details?.endDate[0].seconds * 1000)) })
+
+
+            setUserDetails({ id: doc.id, details })
+        });
+    };
+
+
+    const submitHandler = async (data) => {
         console.log(data);
+        try {
+
+
+            if (Object.keys(userDetails).length === 0) {
+                const docRef = await addDoc(collection(db, "resume"), data);
+                console.log("Document written with ID: ", docRef);
+            } else {
+                const docRef = doc(db, 'resume', userDetails?.id);
+                const updateData = await updateDoc(docRef, {
+                    data
+                })
+                console.log('Data updated', updateData)
+            }
+            router.push('/your-resume')
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
     };
     // education field
     const addEducationField = () => {
@@ -97,7 +145,7 @@ const page = () => {
     };
     console.log(errors)
     return (
-        <section section className="text-gray-600 body-font relative" >
+        <section className="text-gray-600 body-font relative" >
             <div className="container px-5 py-24 mx-auto">
                 <div className="flex flex-col text-center w-full mb-12">
                     <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Create Your Resume</h1>
@@ -111,10 +159,10 @@ const page = () => {
                                 <Controller
                                     name="firstName"
                                     control={control}
-                                    defaultValue=""
+                                    defaultValue={""}
                                     render={({ field }) => (
                                         <div className="relative">
-                                            <label for="firstName" className="leading-7 text-sm text-gray-600">First Name</label>
+                                            <label htmlFor="firstName" className="leading-7 text-sm text-gray-600">First Name</label>
                                             <input
                                                 type="text"
                                                 id="firstName"
@@ -135,7 +183,7 @@ const page = () => {
                                     defaultValue=""
                                     render={({ field }) => (
                                         <div className="relative">
-                                            <label for="lastname" className="leading-7 text-sm text-gray-600">Last Name</label>
+                                            <label htmlFor="lastname" className="leading-7 text-sm text-gray-600">Last Name</label>
                                             <input
                                                 type="text"
                                                 id="lastname"
@@ -155,7 +203,7 @@ const page = () => {
                                     defaultValue=""
                                     render={({ field }) => (
                                         <div className="relative">
-                                            <label for="email" className="leading-7 text-sm text-gray-600">Email</label>
+                                            <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
                                             <input
                                                 type="email"
                                                 id="email"
@@ -174,7 +222,7 @@ const page = () => {
                                     defaultValue=""
                                     render={({ field }) => (
                                         <div className="relative">
-                                            <label for="mobileNumber" className="leading-7 text-sm text-gray-600">Mobile Number</label>
+                                            <label htmlFor="mobileNumber" className="leading-7 text-sm text-gray-600">Mobile Number</label>
                                             <input
                                                 type="text"
                                                 id="mobileNumber"
@@ -194,7 +242,7 @@ const page = () => {
                                     defaultValue=""
                                     render={({ field }) => (
                                         <div className="relative">
-                                            <label for="role" className="leading-7 text-sm text-gray-600">Role</label>
+                                            <label htmlFor="role" className="leading-7 text-sm text-gray-600">Role</label>
                                             <input
                                                 type="text"
                                                 id="role"
@@ -215,7 +263,7 @@ const page = () => {
                                     defaultValue=""
                                     render={({ field }) => (
                                         <div className="relative">
-                                            <label for={"aboutMe"} className="leading-7 text-sm text-gray-600">About Me</label>
+                                            <label htmlFor={"aboutMe"} className="leading-7 text-sm text-gray-600">About Me</label>
                                             <textarea
                                                 id={"aboutMe"}
                                                 name="aboutMe"
@@ -236,8 +284,8 @@ const page = () => {
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Education</h1>
 
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addEducationField}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
                             Add Education
                         </button>
@@ -251,7 +299,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`schoolName[${index}]`} className="leading-7 text-sm text-gray-600">School/College Name</label>
+                                                <label htmlFor={`schoolName[${index}]`} className="leading-7 text-sm text-gray-600">School/College Name</label>
                                                 <input
                                                     type="text"
                                                     id={`schoolName[${index}]`}
@@ -271,7 +319,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`degree[${index}]`} className="leading-7 text-sm text-gray-600">Degree</label>
+                                                <label htmlFor={`degree[${index}]`} className="leading-7 text-sm text-gray-600">Degree</label>
                                                 <input
                                                     type="text"
                                                     id={`degree[${index}]`}
@@ -291,7 +339,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`startDate[${index}]`} className="leading-7 text-sm text-gray-600">Start Date</label>
+                                                <label htmlFor={`startDate[${index}]`} className="leading-7 text-sm text-gray-600">Start Date</label>
                                                 <input
                                                     type="date"
                                                     id={`startDate[${index}]`}
@@ -311,7 +359,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`endDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
+                                                <label htmlFor={`endDate[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
                                                 <input
                                                     type="date"
                                                     id={`endDate[${index}]`}
@@ -343,8 +391,8 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Skills</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addskillsField}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
                             Add Skills
                         </button>
@@ -357,7 +405,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`skills[${index}]`} className="leading-7 text-sm text-gray-600">Skills Name</label>
+                                                <label htmlFor={`skills[${index}]`} className="leading-7 text-sm text-gray-600">Skills Name</label>
                                                 <input
                                                     type="text"
                                                     id={`skills[${index}]`}
@@ -408,8 +456,8 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Experience</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addsExperienceField}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
                             Add Experience
                         </button>
@@ -422,7 +470,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`jobTitle[${index}]`} className="leading-7 text-sm text-gray-600">Job Title</label>
+                                                <label htmlFor={`jobTitle[${index}]`} className="leading-7 text-sm text-gray-600">Job Title</label>
                                                 <input
                                                     type="text"
                                                     id={`jobTitle[${index}]`}
@@ -442,7 +490,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`companyName[${index}]`} className="leading-7 text-sm text-gray-600">Company Name</label>
+                                                <label htmlFor={`companyName[${index}]`} className="leading-7 text-sm text-gray-600">Company Name</label>
                                                 <input
                                                     type="text"
                                                     id={`companyName[${index}]`}
@@ -462,7 +510,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`startDateExperience[${index}]`} className="leading-7 text-sm text-gray-600">Start Date</label>
+                                                <label htmlFor={`startDateExperience[${index}]`} className="leading-7 text-sm text-gray-600">Start Date</label>
                                                 <input
                                                     type="date"
                                                     id={`tartDateExperience[${index}]`}
@@ -482,7 +530,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`endDateExperience[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
+                                                <label htmlFor={`endDateExperience[${index}]`} className="leading-7 text-sm text-gray-600">End Date</label>
                                                 <input
                                                     type="date"
                                                     id={`endDateExperience[${index}]`}
@@ -513,8 +561,8 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Projects</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addProjectField}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
                             Add Project
                         </button>
@@ -528,7 +576,7 @@ const page = () => {
                                             defaultValue=""
                                             render={({ field }) => (
                                                 <div className="relative">
-                                                    <label for={`projectTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
+                                                    <label htmlFor={`projectTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
                                                     <input
                                                         type="text"
                                                         id={`projectTitle[${index}]`}
@@ -550,7 +598,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`projectDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <label htmlFor={`projectDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
                                                 <textarea
                                                     id={`projectDescription`}
                                                     name={`projectDescription[${index}]`}
@@ -581,8 +629,8 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Achievement</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addAchievementField}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
                             Add Achievement
                         </button>
@@ -596,7 +644,7 @@ const page = () => {
                                             defaultValue=""
                                             render={({ field }) => (
                                                 <div className="relative">
-                                                    <label for={`achievementTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
+                                                    <label htmlFor={`achievementTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
                                                     <input
                                                         type="text"
                                                         id={`achievementTitle[${index}]`}
@@ -618,7 +666,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`achievementDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <label htmlFor={`achievementDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
                                                 <textarea
                                                     id={`achievementDescription[${index}]`}
                                                     name="achievementDescription"
@@ -650,8 +698,8 @@ const page = () => {
                     <div className="lg:w-1/2 md:w-2/3 mx-auto">
                         <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">Aditional</h1>
                         <button type="button" className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={addAdditionalField}>
-                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" />
+                            <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
                             Add Additional
                         </button>
@@ -665,7 +713,7 @@ const page = () => {
                                             defaultValue=""
                                             render={({ field }) => (
                                                 <div className="relative">
-                                                    <label for={`aditionalTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
+                                                    <label htmlFor={`aditionalTitle[${index}]`} className="leading-7 text-sm text-gray-600">Title</label>
                                                     <input
                                                         type="text"
                                                         id={`aditionalTitle[${index}]`}
@@ -686,7 +734,7 @@ const page = () => {
                                         defaultValue=""
                                         render={({ field }) => (
                                             <div className="relative">
-                                                <label for={`aditionalDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
+                                                <label htmlFor={`aditionalDescription[${index}]`} className="leading-7 text-sm text-gray-600">Description</label>
                                                 <textarea
                                                     id={`aditionalDescription[${index}]`}
                                                     name="aditionalDescription"
