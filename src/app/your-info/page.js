@@ -1,18 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  addDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ResumeValidation } from "./ResumeValidation";
 import { useRouter } from "next/navigation";
+import useGetUserInfo from "../hooks/getUserInfo";
 const page = () => {
   const {
     control,
@@ -24,7 +18,7 @@ const page = () => {
     mode: "onChange",
     defaultValues: {
       education: [{ schoolName: "", degree: "", startDate: "", endDate: "" }],
-      skills: [""],
+      skills: [{ skillName: "" }],
       experience: [
         { jobTitle: "", companyName: "", startDate: "", endDate: "" },
       ],
@@ -66,55 +60,26 @@ const page = () => {
   });
 
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { userDetails } = useGetUserInfo();
 
-  const [userDetails, setUserDetails] = useState({});
   useEffect(() => {
-    getDetails();
-  }, []);
-
-  const formatDate = (date) => {
-    if (!isNaN(date.getFullYear())) {
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-        2,
-        "0"
-      )}-${String(date.getDate()).padStart(2, "0")}`;
-    }
-    return "";
-  };
-
-  const getDetails = async () => {
-    const testRef = await collection(db, "resume");
-    const queryString = query(testRef);
-    const querySnapshot = await getDocs(queryString);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      // console.log(doc.id, " => ", doc.data(), doc);
-      const details = doc.data();
-      // setValue('firstName', details?.firstName)
-      console.log(formatDate(new Date(details?.endDate[0].seconds * 1000)));
-      reset(details);
-
-      setUserDetails({ id: doc.id, details });
-    });
-  };
+    reset(userDetails?.details);
+  }, [userDetails]);
 
   const submitHandler = async (data) => {
-    console.log(data);
-    console.log({ ...data, endDate: formatDate(new Date(data?.endDate)) });
+    setLoading(true);
     try {
-      if (Object.keys(userDetails).length === 0) {
-        const docRef = await addDoc(collection(db, "resume"), data);
-        console.log("Document written with ID: ", docRef);
-      } else {
-        const docRef = doc(db, "resume", userDetails?.id);
-        const updateData = await updateDoc(docRef, {
-          data,
-        });
-        console.log("Data updated", updateData);
-      }
+      const docRef = doc(db, "resume", "one");
+      const updateData = await setDoc(docRef, {
+        data,
+      });
+      console.log("Data updated", updateData);
       router.push("/your-resume");
     } catch (e) {
       console.error("Error adding document: ", e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -241,6 +206,7 @@ const page = () => {
                         type="text"
                         id="mobileNumber"
                         name="mobileNumber"
+                        maxLength={10}
                         className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         {...field}
                       />
@@ -376,10 +342,9 @@ const page = () => {
                       </div>
                     )}
                   />
-                  {errors?.schoolName?.[index] && (
+                  {errors?.education?.[index]?.schoolName && (
                     <span className="text-red-600">
-                      {" "}
-                      {errors?.schoolName?.[index]?.message}
+                      {errors?.education?.[index]?.schoolName?.message}
                     </span>
                   )}
                 </div>
@@ -406,10 +371,9 @@ const page = () => {
                       </div>
                     )}
                   />
-                  {errors?.degree?.[index] && (
+                  {errors?.education?.[index]?.degree && (
                     <span className="text-red-600">
-                      {" "}
-                      {errors?.degree?.[index]?.message}
+                      {errors?.education?.[index]?.degree?.message}
                     </span>
                   )}
                 </div>
@@ -432,21 +396,14 @@ const page = () => {
                           name="startDate"
                           className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                           {...field}
-                          value={
-                            field?.value?.seconds
-                              ? formatDate(
-                                new Date(field?.value?.seconds * 1000)
-                              )
-                              : formatDate(new Date(field.value))
-                          }
                         />
                       </div>
                     )}
                   />
-                  {errors?.startDate?.[index] && (
+                  {errors?.education?.[index]?.startDate && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.startDate?.[index]?.message}
+                      {errors?.education?.[index]?.startDate?.message}
                     </span>
                   )}
                 </div>
@@ -469,21 +426,14 @@ const page = () => {
                           name="endDate"
                           className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                           {...field}
-                          value={
-                            field?.value?.seconds
-                              ? formatDate(
-                                new Date(field?.value?.seconds * 1000)
-                              )
-                              : field.value
-                          }
                         />
                       </div>
                     )}
                   />
-                  {errors?.endDate?.[index] && (
+                  {errors?.education?.[index]?.endDate && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.endDate?.[index]?.message}
+                      {errors?.education?.[index]?.endDate?.message}
                     </span>
                   )}
                 </div>
@@ -544,20 +494,20 @@ const page = () => {
               <div className="flex flex-wrap -m-2" key={data?.id}>
                 <div className="p-2 w-1/2">
                   <Controller
-                    name={`skills[${index}]`}
+                    name={`skills[${index}].skillName`}
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                       <div className="relative">
                         <label
-                          htmlFor={`skills[${index}]`}
+                          htmlFor={`skills[${index}].skillName`}
                           className="leading-7 text-sm text-gray-600"
                         >
                           Skills Name
                         </label>
                         <input
                           type="text"
-                          id={`skills[${index}]`}
+                          id={`skills[${index}].skillName`}
                           name="skills"
                           className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                           {...field}
@@ -565,10 +515,10 @@ const page = () => {
                       </div>
                     )}
                   />
-                  {errors?.skills?.[index] && (
+                  {errors?.skills?.[index]?.skillName && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.skills?.[index]?.message}
+                      {errors?.skills?.[index]?.skillName?.message}
                     </span>
                   )}
                 </div>
@@ -659,10 +609,9 @@ const page = () => {
                       </div>
                     )}
                   />
-                  {errors?.jobTitle?.[index] && (
+                  {errors?.experience?.[index]?.jobTitle && (
                     <span className="text-red-600">
-                      {" "}
-                      {errors?.jobTitle?.[index]?.message}
+                      {errors?.experience?.[index]?.jobTitle?.message}
                     </span>
                   )}
                 </div>
@@ -689,10 +638,10 @@ const page = () => {
                       </div>
                     )}
                   />
-                  {errors?.companyName?.[index] && (
+                  {errors?.experience?.[index]?.companyName && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.companyName?.[index]?.message}
+                      {errors?.experience?.[index]?.companyName?.message}
                     </span>
                   )}
                 </div>
@@ -715,21 +664,14 @@ const page = () => {
                           name="startDateExperience"
                           className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                           {...field}
-                          value={
-                            field?.value?.seconds
-                              ? formatDate(
-                                new Date(field?.value?.seconds * 1000)
-                              )
-                              : field.value
-                          }
                         />
                       </div>
                     )}
                   />
-                  {errors?.startDateExperience?.[index] && (
+                  {errors?.experience?.[index]?.startDate && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.startDateExperience?.[index]?.message}
+                      {errors?.experience?.[index]?.startDate?.message}
                     </span>
                   )}
                 </div>
@@ -752,21 +694,14 @@ const page = () => {
                           name="endDateExperience"
                           className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                           {...field}
-                          value={
-                            field?.value?.seconds
-                              ? formatDate(
-                                new Date(field?.value?.seconds * 1000)
-                              )
-                              : field.value
-                          }
                         />
                       </div>
                     )}
                   />
-                  {errors?.endDateExperience?.[index] && (
+                  {errors?.experience?.[index]?.endDate && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.endDateExperience?.[index]?.message}
+                      {errors?.experience?.[index]?.endDate?.message}
                     </span>
                   )}
                 </div>
@@ -850,7 +785,7 @@ const page = () => {
                         </div>
                       )}
                     />
-                    {errors?.project?.[index] && (
+                    {errors?.project?.[index]?.title && (
                       <span className="text-red-600">
                         {" "}
                         {errors?.project?.[index]?.title?.message}
@@ -880,10 +815,10 @@ const page = () => {
                       </div>
                     )}
                   />
-                  {errors?.product?.[index]?.description && (
+                  {errors?.project?.[index]?.description && (
                     <span className="text-red-600">
                       {" "}
-                      {errors?.product?.[index]?.description?.message}
+                      {errors?.project?.[index]?.description?.message}
                     </span>
                   )}
                 </div>
@@ -918,9 +853,9 @@ const page = () => {
             <button
               className="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
               type="submit"
-              disabled={errors?.length > 0 && true}
+              disabled={(errors?.length > 0 && true) || loading}
             >
-              Submit
+              {loading ? "Loading...." : "Submit"}
             </button>
           </div>
         </form>
