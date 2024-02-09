@@ -12,6 +12,7 @@ const page = () => {
     userDetails: { details: userInfo },
     loading,
   } = useGetUserInfo();
+
   const convertToPdf = async () => {
     const element = document.getElementById("pdf-content"); // Replace 'pdf-content' with the ID of the HTML element you want to convert
     const pdfOptions = {
@@ -25,7 +26,6 @@ const page = () => {
     // html2pdf(element, pdfOptions);
     await html2pdf().from(element).set(pdfOptions).save();
   };
-  console.log(userInfo);
   return (
     <>
       {loading ? (
