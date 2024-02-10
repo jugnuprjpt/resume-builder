@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ResumeValidation } from "./ResumeValidation";
 import { useRouter } from "next/navigation";
 import useGetUserInfo from "../hooks/getUserInfo";
+
 const page = () => {
   const {
     control,
@@ -67,6 +68,8 @@ const page = () => {
     reset(userDetails?.details);
   }, [userDetails]);
 
+  // ------------------ submit handler ---------------
+
   const submitHandler = async (data) => {
     setLoading(true);
     try {
@@ -93,11 +96,14 @@ const page = () => {
         </div>
         <form onSubmit={handleSubmit(submitHandler)}>
           {/* Personal Detail */}
+
           <div className="lg:w-1/2 md:w-2/3 mx-auto">
             <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">
               Personal Details
             </h1>
             <div className="flex flex-wrap -m-2">
+              {/* ----------- first name ---------- */}
+
               <div className="p-2 w-1/2">
                 <Controller
                   name="firstName"
@@ -129,6 +135,8 @@ const page = () => {
                 )}
               </div>
 
+              {/* ----------- last name ---------- */}
+
               <div className="p-2 w-1/2">
                 <Controller
                   name="lastName"
@@ -159,6 +167,9 @@ const page = () => {
                   </span>
                 )}
               </div>
+
+              {/* ----------- Email ---------- */}
+
               <div className="p-2 w-1/2">
                 <Controller
                   name="email"
@@ -189,6 +200,9 @@ const page = () => {
                   </span>
                 )}
               </div>
+
+              {/* ----------- Mobile number ---------- */}
+
               <div className="p-2 w-1/2">
                 <Controller
                   name="mobileNumber"
@@ -221,6 +235,8 @@ const page = () => {
                 )}
               </div>
 
+              {/* ----------- role ---------- */}
+
               <div className="p-2 w-full">
                 <Controller
                   name="role"
@@ -248,6 +264,8 @@ const page = () => {
                   <span className="text-red-600"> {errors?.role?.message}</span>
                 )}
               </div>
+
+              {/* ----------- About Me ---------- */}
 
               <div className="p-2 w-full">
                 <Controller
@@ -281,7 +299,9 @@ const page = () => {
             </div>
           </div>
           <br />
+
           {/* Education Detail */}
+
           <div className="lg:w-1/2 md:w-2/3 mx-auto">
             <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">
               Education
@@ -318,7 +338,7 @@ const page = () => {
             </button>
 
             {educationField?.map((data, index) => (
-              <div className="flex flex-wrap -m-2" key={data?.id}>
+              <div className="flex flex-wrap -m-2 p-2" key={data?.id}>
                 <div className="p-2 w-1/2">
                   <Controller
                     name={`education[${index}].schoolName`}
@@ -328,7 +348,7 @@ const page = () => {
                       <div className="relative">
                         <label
                           htmlFor={`education[${index}].schoolName`}
-                          className="leading-7 text-sm text-gray-600"
+                          className="leading-7 text-sm text-gray-600 p-2"
                         >
                           School/College Name
                         </label>
@@ -438,32 +458,36 @@ const page = () => {
                   )}
                 </div>
                 {educationField?.length > 1 && (
-                  <button
-                    type="button"
-                    className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    onClick={() => removeEducation(index)}
-                  >
-                    <svg
-                      className="w-6 h-6 text-gray-800 dark:text-white"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
+                  <div className="p-3">
+                    <button
+                      type="button"
+                      className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      onClick={() => removeEducation(index)}
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Remove Education
-                  </button>
+                      <svg
+                        className="w-6 h-6 text-white-800 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="text-sm px-3">Remove Education</span>
+                    </button>
+                  </div>
                 )}
               </div>
             ))}
           </div>
           <br />
+
           {/* Skills Detail */}
+
           <div className="lg:w-1/2 md:w-2/3 mx-auto">
             <h1 className="sm:text-2xl text-xl font-medium title-font mb-4 text-gray-900">
               Skills
@@ -491,7 +515,7 @@ const page = () => {
               <span className="text-sm px-3">Add Skills</span>
             </button>
             {skillsField?.map((data, index) => (
-              <div className="flex flex-wrap -m-2" key={data?.id}>
+              <div className="flex flex-wrap -m-2 p-2" key={data?.id}>
                 <div className="p-2 w-1/2">
                   <Controller
                     name={`skills[${index}].skillName`}
@@ -530,7 +554,7 @@ const page = () => {
                       onClick={() => removeSkills(index)}
                     >
                       <svg
-                        className="w-6 h-6 text-gray-800 dark:text-white"
+                        className="w-6 h-6 text-white-800 dark:text-white"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -542,7 +566,7 @@ const page = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      Remove Skills
+                      <span className="text-sm px-3"> Remove Skills</span>
                     </button>
                   )}
                 </div>
@@ -585,7 +609,7 @@ const page = () => {
               <span className="text-sm px-3">Add Experience</span>
             </button>
             {experienceField?.map((data, index) => (
-              <div className="flex flex-wrap -m-2" key={data?.id}>
+              <div className="flex flex-wrap -m-2 p-2" key={data?.id}>
                 <div className="p-2 w-1/2">
                   <Controller
                     name={`experience[${index}].jobTitle`}
@@ -712,7 +736,7 @@ const page = () => {
                     onClick={() => removeExperience(index)}
                   >
                     <svg
-                      className="w-6 h-6 text-gray-800 dark:text-white"
+                      className="w-6 h-6 text-white-800 dark:text-white"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -724,7 +748,7 @@ const page = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Remove Experience
+                    <span className="text-sm px-3"> Remove Experience</span>
                   </button>
                 )}
               </div>
@@ -761,7 +785,7 @@ const page = () => {
             </button>
             {projectField?.map((data, index) => (
               <React.Fragment key={data?.id}>
-                <div className="flex flex-wrap -m-2">
+                <div className="flex flex-wrap -m-2 p-2">
                   <div className="p-2 w-full">
                     <Controller
                       name={`project[${index}].title`}
@@ -825,11 +849,11 @@ const page = () => {
                 {projectField?.length > 1 && (
                   <button
                     type="button"
-                    className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mt-4"
                     onClick={() => removeProject(index)}
                   >
                     <svg
-                      className="w-6 h-6 text-gray-800 dark:text-white"
+                      className="w-6 h-6 text-white-800 dark:text-white"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -841,7 +865,7 @@ const page = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Remove Project
+                    <span className="text-sm px-3"> Remove Project</span>
                   </button>
                 )}
               </React.Fragment>
